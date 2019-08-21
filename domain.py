@@ -3,6 +3,17 @@
 
 from enum import Enum
 
+class Domain:
+    def __init__(self):
+        self.blocks = []
+        self.node_blocks = []
+
+class Type(Enum):
+    INSIDE = 0
+    CONNECTION = 1
+    DIRICHLET = 2
+    NEUMANN = 3
+
 class Block:
     """
     Block class
@@ -10,17 +21,14 @@ class Block:
 
     """
 
-    def __init__(self, id):
+    def __init__(self, id, min, max):
         self.id = id
+        self.min = min
+        self.max = max
         self.sides = (None, None, None, None)
 
     def set_sides(self, side1, side2, side3, side4):
         self.sides = (side1, side2, side3, side4)
-
-class BCType(Enum):
-    CONNECTION = 0
-    DIRICHLET = 1
-    NEUMANN = 2
 
 class Connection:
     def __init__(self, block_id, side_id):
@@ -30,6 +38,6 @@ class Connection:
 class Side:
     def __init__(self, id, type, value = None):
         self.id = id
-        self.type = None
-        self.value = None
+        self.type = type
+        self.value = value
         self.connections = []
