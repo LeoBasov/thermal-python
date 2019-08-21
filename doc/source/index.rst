@@ -5,6 +5,10 @@
 
 Welcome to Thermal 2D rot-sym's documentation!
 ==============================================
+This is a thermal model for rotational symetrical simulation domains.
+The domains are going to be build up from blocs.
+As regalr mesh is used.
+Each blocks position and dimension is measured in discrete coordinates which represent the grid nodes.
 
 .. toctree::
    :maxdepth: 2
