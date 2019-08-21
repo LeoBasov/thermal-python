@@ -8,6 +8,13 @@ class Domain:
         self.blocks = []
         self.node_blocks = []
 
+class Node:
+    def __init__(self):
+        self.id = None
+        self.pos_x = None
+        self.pos_y = None
+        self.type = None
+
 class Type(Enum):
     INSIDE = 0
     CONNECTION = 1
