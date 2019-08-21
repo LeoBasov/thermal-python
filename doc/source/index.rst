@@ -14,7 +14,7 @@ Each blocks position and dimension is measured in discrete coordinates which rep
    :maxdepth: 2
    :caption: Contents:
 
-
+   model/domain
 
 Indices and tables
 ==================
