@@ -65,12 +65,14 @@ def main():
     domain.set_side(orifice3, 2, thermal.domain.Type.NEUMANN, value = 1.0)
     domain.set_side(orifice3, 3, thermal.domain.Type.NEUMANN, value = 1.0)
 
-    print('Assembling nodes')
+    print(80*'-')
+    print('ASSEMBLING NODES')
     domain.assemble_nodes()
 
-    print('Assembling numerics')
+    print(80*'-')
+    print('ASSEMBLING NUMERICS')
     sover.assemble(domain, CELL_SIZE)
-    print('Solving numerics')
+    print('SOLVING NUMERICS')
     sover.solve(DIFF_MAX)
 
     visualizer.plot(domain)

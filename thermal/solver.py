@@ -22,4 +22,16 @@ class Solver:
         pass
 
     def solve(self, diff_frac_max):
-        pass
+        itter = 0
+
+        while True:
+            itter += 1
+            new_vector = np.matmul(self.matrix, self.vector)
+            diffs = abs(new_vector - self.vector)
+            self.vector = new_vector
+
+            print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, max(diffs)), end="\r", flush=True)
+
+            if max(diffs) < diff_frac_max:
+                print("")
+                break
