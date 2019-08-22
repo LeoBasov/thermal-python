@@ -25,6 +25,36 @@ class Visualizer:
                 max[0] = node.pos[0]
 
             if node.pos[1] > max[1]:
-                max[1] = node.pos[0]
+                max[1] = node.pos[1]
 
         return max
+
+    def find_min(self, domain):
+        min = [sys.float_info.max, sys.float_info.max]
+
+        for node in domain.nodes:
+            if node.pos[0] < min[0]:
+                min[0] = node.pos[0]
+
+            if node.pos[1] < min[1]:
+                min[1] = node.pos[1]
+
+        return min
+
+    def plot_inter_r(self, domain):
+        min = self.find_min(domain)
+        max = self.find_max(domain)
+
+        values = []
+
+        for r in range(min[1], max[1] + 1):
+            loc = []
+
+            for node in domain.nodes:
+                if node.pos[1] == r:
+                    loc.append(node.temperature)
+
+            values.append(np.mean(loc))
+
+        plt.plot(values)
+        plt.show()
