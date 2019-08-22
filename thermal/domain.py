@@ -7,6 +7,7 @@ class Domain:
     def __init__(self):
         self.blocks = []
         self.node_blocks = []
+        self.nodes = []
 
 class Node:
     def __init__(self):
