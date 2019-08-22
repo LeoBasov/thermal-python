@@ -13,7 +13,7 @@ def main():
     print('Thermal test')
 
     CELL_SIZE = 0.001
-    DIFF_MAX = 1
+    DIFF_MAX = 1.0e-3
 
     domain = thermal.domain.Domain()
     sover = thermal.solver.Solver()

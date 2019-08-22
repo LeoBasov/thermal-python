@@ -74,11 +74,12 @@ class Solver:
             itter += 1
             new_vector = np.matmul(self.matrix, self.vector) + self.vector_add
             diffs = abs(new_vector - self.vector)
+            diff_abs = max(diffs)/min(self.vector)
             self.vector = new_vector
 
-            print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, max(diffs)), end="\r", flush=True)
+            print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, diff_abs), end="\r", flush=True)
 
-            if max(diffs) < diff_frac_max:
+            if diff_abs < diff_frac_max:
                 print("")
                 break
 
