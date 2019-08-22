@@ -13,17 +13,17 @@ def main():
     print('Thermal test')
 
     CELL_SIZE = 0.001
-    DIFF_MAX = 1.0e-3
+    DIFF_MAX = 1.0e-4
 
     domain = thermal.domain.Domain()
     sover = thermal.solver.Solver()
     visualizer = thermal.visualizer.Visualizer()
 
     #set blocks
-    block = domain.add_block((0, 10), (100, 100), conductivity = 1, density = 1, heat_capacity = 1)
+    block = domain.add_block((0, 1), (50, 50), conductivity = 1, density = 1, heat_capacity = 1)
 
     #set sides housing_1
-    domain.set_side(block, 0, thermal.domain.Type.NEUMANN, value = 1.0e+6)
+    domain.set_side(block, 0, thermal.domain.Type.NEUMANN, value = 0.)
     domain.set_side(block, 1, thermal.domain.Type.DIRICHLET, value = 100.0)
     domain.set_side(block, 2, thermal.domain.Type.NEUMANN, value = 0.0)
     domain.set_side(block, 3, thermal.domain.Type.DIRICHLET, value = 10000.0)
@@ -40,6 +40,8 @@ def main():
     sover.get_results(domain)
 
     visualizer.plot(domain)
+    visualizer.plot_inter_r(domain)
+    visualizer.plot_inter_z(domain)
 
     print(80*'=')
 
