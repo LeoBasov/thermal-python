@@ -61,7 +61,7 @@ class Domain:
                         side_type = SideType.LEFT
                         (type, temperature, normder) = self._get_type_temp_normder(block.sides[2])
                     elif r == block.min[1]:
-                        side_type = SideType.RIGHT
+                        side_type = SideType.DOWN
                         (type, temperature, normder) = self._get_type_temp_normder(block.sides[3])
                     else:
                         type = Type.INSIDE
