@@ -49,24 +49,25 @@ class Domain:
                     type = None
                     side_type = None
                     temperature = None
+                    normder = None
 
                     if z == block.max[0]:
                         side_type = SideType.RIGHT
-                        (type, temperature) = self._get_type_temp(block.sides[0])
+                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[0])
                     elif r == block.max[1]:
                         side_type = SideType.UP
-                        (type, temperature) = self._get_type_temp(block.sides[1])
+                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[1])
                     elif z == block.min[0]:
                         side_type = SideType.LEFT
-                        (type, temperature) = self._get_type_temp(block.sides[2])
+                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[2])
                     elif r == block.min[1]:
                         side_type = SideType.RIGHT
-                        (type, temperature) = self._get_type_temp(block.sides[3])
+                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[3])
                     else:
                         type = Type.INSIDE
 
                     if type != Type.CONNECTION or not self._nodes_exists(pos):
-                        node = Node(type, pos, temperature, conductivity, density, heat_capacity, side_type)
+                        node = Node(type, pos, temperature, conductivity, density, heat_capacity, side_type, normder)
 
                         self.nodes.append(node)
 
@@ -77,14 +78,17 @@ class Domain:
             if self.nodes[i].pos == pos:
                 return (i, self.nodes[i])
 
-    def _get_type_temp(self, side):
+    def _get_type_temp_normder(self, side):
         type = side.type
         temp = None
+        normder = None
 
         if type == Type.DIRICHLET:
             temp = side.value
+        elif type == Type.NEUMANN:
+            normder = side.value
 
-        return (type, temp)
+        return (type, temp, normder)
 
     def _nodes_exists(self, pos):
         for node in self.nodes:
@@ -113,7 +117,7 @@ class Domain:
                  node.temperature = temperature
 
 class Node:
-    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity, side_type):
+    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity, side_type, normder):
         self.type = type
         self.pos = pos
         self.temperature = temperature
@@ -122,6 +126,7 @@ class Node:
         self.heat_capacity = heat_capacity
 
         self.side_type = side_type
+        self.normder = normder
 
 class Type(Enum):
     INSIDE = 0
