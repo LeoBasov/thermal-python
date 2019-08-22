@@ -6,20 +6,21 @@ class Solver:
         self.vector = None
 
     def assemble(self, domain, cell_size):
-        size = len(domain.nodes)
-
-        self.vector = np.zeros(size)
-        self.matrix = np.zeros((size, size))
-
         self._assemble_vector(domain)
         self._assemble_matrix(domain, cell_size)
 
     def _assemble_vector(self, domain):
+        self.vector = np.zeros(len(domain.nodes))
+
         for i in range(len(domain.nodes)):
             self.vector[i] = domain.nodes[i].temperature
 
     def _assemble_matrix(self, domain, cell_size):
-        pass
+        size = len(domain.nodes)
+        self.matrix = np.zeros((size, size))
+
+        for i in range(size):
+            node = domain.nodes[i]
 
     def solve(self, diff_frac_max):
         itter = 0
