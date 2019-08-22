@@ -47,21 +47,26 @@ class Domain:
                     heat_capacity = block.heat_capacity
 
                     type = None
+                    side_type = None
                     temperature = None
 
                     if z == block.max[0]:
+                        side_type = SideType.RIGHT
                         (type, temperature) = self._get_type_temp(block.sides[0])
                     elif r == block.max[1]:
+                        side_type = SideType.UP
                         (type, temperature) = self._get_type_temp(block.sides[1])
                     elif z == block.min[0]:
+                        side_type = SideType.LEFT
                         (type, temperature) = self._get_type_temp(block.sides[2])
                     elif r == block.min[1]:
+                        side_type = SideType.RIGHT
                         (type, temperature) = self._get_type_temp(block.sides[3])
                     else:
                         type = Type.INSIDE
 
                     if type != Type.CONNECTION or not self._nodes_exists(pos):
-                        node = Node(type, pos, temperature, conductivity, density, heat_capacity)
+                        node = Node(type, pos, temperature, conductivity, density, heat_capacity, side_type)
 
                         self.nodes.append(node)
 
@@ -108,7 +113,7 @@ class Domain:
                  node.temperature = temperature
 
 class Node:
-    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity):
+    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity, side_type):
         self.type = type
         self.pos = pos
         self.temperature = temperature
@@ -116,11 +121,19 @@ class Node:
         self.density = density
         self.heat_capacity = heat_capacity
 
+        self.side_type = side_type
+
 class Type(Enum):
     INSIDE = 0
     CONNECTION = 1
     DIRICHLET = 2
     NEUMANN = 3
+
+class SideType(Enum):
+    UP = 0
+    DOWN = 1
+    RIGHT = 2
+    LEFT = 3
 
 class Block:
     """
