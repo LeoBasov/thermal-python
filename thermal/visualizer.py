@@ -13,7 +13,8 @@ class Visualizer:
         for node in domain.nodes:
             matrix[node.pos[0]][node.pos[1]] = node.temperature
 
-        plt.imshow(np.transpose(matrix))
+        plt.pcolormesh(np.transpose(matrix))
+        plt.colorbar()
         plt.show()
 
     def find_max(self, domain):
