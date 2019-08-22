@@ -23,7 +23,7 @@ def main():
     block = domain.add_block((0, 10), (100, 100), conductivity = 1, density = 1, heat_capacity = 1)
 
     #set sides housing_1
-    domain.set_side(block, 0, thermal.domain.Type.NEUMANN, value = 0.0)
+    domain.set_side(block, 0, thermal.domain.Type.NEUMANN, value = 1.0e+6)
     domain.set_side(block, 1, thermal.domain.Type.DIRICHLET, value = 100.0)
     domain.set_side(block, 2, thermal.domain.Type.NEUMANN, value = 0.0)
     domain.set_side(block, 3, thermal.domain.Type.DIRICHLET, value = 10000.0)

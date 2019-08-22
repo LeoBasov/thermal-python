@@ -6,10 +6,12 @@ class Solver:
     def __init__(self):
         self.matrix = None
         self.vector = None
+        self.vector_add = None
 
     def assemble(self, domain, cell_size):
         self._assemble_vector(domain)
         self._assemble_matrix(domain, cell_size)
+        self._assemble_vector_add(domain, cell_size)
 
     def _assemble_vector(self, domain):
         self.vector = np.zeros(len(domain.nodes))
@@ -58,12 +60,19 @@ class Solver:
             elif node.type == Type.DIRICHLET:
                 self.matrix[row][row] = 1.0
 
+    def _assemble_vector_add(self, domain, cell_size):
+        self.vector_add = np.zeros(len(domain.nodes))
+
+        for i in range(len(domain.nodes)):
+            if domain.nodes[i].type == Type.NEUMANN:
+                self.vector_add[i] = domain.nodes[i].normder*cell_size
+
     def solve(self, diff_frac_max):
         itter = 0
 
         while True:
             itter += 1
-            new_vector = np.matmul(self.matrix, self.vector)
+            new_vector = np.matmul(self.matrix, self.vector) + self.vector_add
             diffs = abs(new_vector - self.vector)
             self.vector = new_vector
 
