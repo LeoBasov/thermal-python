@@ -1,6 +1,7 @@
 """
 """
 
+import sys
 from enum import Enum
 
 class Domain:
@@ -36,12 +37,79 @@ class Domain:
         self.blocks[block_id].sides[side_id].value = value
         self.blocks[block_id].sides[side_id].connection = connection
 
+    def assemble_nodes(self):
+        for block in self.blocks:
+            for z in range(block.min[0], block.max[0] + 1):
+                for r in range(block.min[1], block.max[1] + 1):
+                    pos = (z, r)
+                    conductivity = block.conductivity
+                    density = block.density
+                    heat_capacity = block.heat_capacity
+
+                    type = None
+                    temperature = None
+
+                    if z == block.max[0]:
+                        (type, temperature) = self._get_type_temp(block.sides[0])
+                    elif r == block.max[1]:
+                        (type, temperature) = self._get_type_temp(block.sides[1])
+                    elif z == block.min[0]:
+                        (type, temperature) = self._get_type_temp(block.sides[2])
+                    elif r == block.min[1]:
+                        (type, temperature) = self._get_type_temp(block.sides[3])
+                    else:
+                        type = Type.INSIDE
+
+                    if type != Type.CONNECTION or not self._nodes_exists(pos):
+                        node = Node(type, pos, temperature, conductivity, density, heat_capacity)
+
+                        self.nodes.append(node)
+
+        self._set_temperatures()
+
+    def _get_type_temp(self, side):
+        type = side.type
+        temp = None
+
+        if type == Type.DIRICHLET:
+            temp = side.value
+
+        return (type, temp)
+
+    def _nodes_exists(self, pos):
+        for node in self.nodes:
+            if node.pos == pos:
+                return True
+
+        return False
+
+    def _set_temperatures(self):
+        max = -sys.float_info.max
+        min =  sys.float_info.max
+        temperature = None
+
+        for node in self.nodes:
+            if node.type == Type.DIRICHLET:
+                if node.temperature > max:
+                    max = node.temperature
+
+                if node.temperature < min:
+                    min = node.temperature
+
+        temperature = 0.5*(min + max)
+
+        for node in self.nodes:
+            if node.type != Type.DIRICHLET:
+                 node.temperature = temperature
+
 class Node:
-    def __init__(self):
-        self.id = None
-        self.pos_x = None
-        self.pos_y = None
-        self.type = None
+    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity):
+        self.type = type
+        self.pos = pos
+        self.temperature = temperature
+        self.conductivity = conductivity
+        self.density = density
+        self.heat_capacity = heat_capacity
 
 class Type(Enum):
     INSIDE = 0

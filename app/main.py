@@ -58,6 +58,11 @@ def main():
     doain.set_side(orifice3, 2, thermal.domain.Type.NEUMANN, value = 1.0)
     doain.set_side(orifice3, 3, thermal.domain.Type.NEUMANN, value = 1.0)
 
+    doain.assemble_nodes()
+
+    for node in doain.nodes:
+        print(node.temperature)
+
     print(80*'=')
 
 if __name__ == '__main__':
