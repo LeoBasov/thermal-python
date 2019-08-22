@@ -5,12 +5,14 @@ import sys
 sys.path.append('../.')
 
 import thermal.domain
+import thermal.visualizer
 
 def main():
     print(80*'=')
     print('Thermal test')
 
     doain = thermal.domain.Domain()
+    visualizer = thermal.visualizer.Visualizer()
 
     #set blocks
     housing_1 = doain.add_block((0, 50), (100, 60), conductivity = 1, density = 1, heat_capacity = 1)
@@ -59,6 +61,8 @@ def main():
     doain.set_side(orifice3, 3, thermal.domain.Type.NEUMANN, value = 1.0)
 
     doain.assemble_nodes()
+
+    visualizer.plot(doain)
 
     print(80*'=')
 
