@@ -58,3 +58,21 @@ class Visualizer:
 
         plt.plot(values)
         plt.show()
+
+    def plot_inter_z(self, domain):
+        min = self.find_min(domain)
+        max = self.find_max(domain)
+
+        values = []
+
+        for z in range(min[0], max[0] + 1):
+            loc = []
+
+            for node in domain.nodes:
+                if node.pos[0] == z:
+                    loc.append(node.temperature)
+
+            values.append(np.mean(loc))
+
+        plt.plot(values)
+        plt.show()
