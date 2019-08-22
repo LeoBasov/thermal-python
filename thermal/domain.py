@@ -8,11 +8,11 @@ class Domain:
         self.blocks = []
         self.nodes = []
 
-    def add_block(self, min, max):
+    def add_block(self, min, max, conductivity, density, heat_capacity):
         self.check(min, max)
 
         id = len(self.blocks)
-        block = Block(id, min, max)
+        block = Block(id, min, max, conductivity, density, heat_capacity)
 
         side1 = Side((max[0], min[1]), max)
         side2 = Side(max, (min[0], max[1]))
@@ -56,11 +56,14 @@ class Block:
 
     """
 
-    def __init__(self, id, min, max):
+    def __init__(self, id, min, max, conductivity, density, heat_capacity):
         self.id = id
         self.min = min
         self.max = max
         self.sides = (None, None, None, None)
+        self.conductivity = conductivity
+        self.density = density
+        self.heat_capacity = heat_capacity
 
     def set_sides(self, side1, side2, side3, side4):
         self.sides = (side1, side2, side3, side4)

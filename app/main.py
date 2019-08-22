@@ -13,14 +13,14 @@ def main():
     doain = thermal.domain.Domain()
 
     #set blocks
-    housing_1 = doain.add_block((0, 50), (100, 60))
-    housing_2 = doain.add_block((100, 50), (200, 60))
+    housing_1 = doain.add_block((0, 50), (100, 60), conductivity = 1, density = 1, heat_capacity = 1)
+    housing_2 = doain.add_block((100, 50), (200, 60), conductivity = 1, density = 1, heat_capacity = 1)
 
-    emitter = doain.add_block((100, 40), (200, 50))
+    emitter = doain.add_block((100, 40), (200, 50), conductivity = 1, density = 1, heat_capacity = 1)
 
-    orifice1 = doain.add_block((200, 50), (210, 60))
-    orifice2 = doain.add_block((200, 40), (210, 50))
-    orifice3 = doain.add_block((200, 30), (210, 40))
+    orifice1 = doain.add_block((200, 50), (210, 60), conductivity = 1, density = 1, heat_capacity = 1)
+    orifice2 = doain.add_block((200, 40), (210, 50), conductivity = 1, density = 1, heat_capacity = 1)
+    orifice3 = doain.add_block((200, 30), (210, 40), conductivity = 1, density = 1, heat_capacity = 1)
 
     #set sides housing_1
     doain.set_side(housing_1, 0, thermal.domain.Type.CONNECTION, connection = thermal.domain.Connection(housing_2, 2))
