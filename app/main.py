@@ -60,9 +60,6 @@ def main():
 
     doain.assemble_nodes()
 
-    for node in doain.nodes:
-        print(node.temperature)
-
     print(80*'=')
 
 if __name__ == '__main__':
