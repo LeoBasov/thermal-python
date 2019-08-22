@@ -39,8 +39,8 @@ def main():
     #set sides emitter
     doain.set_side(emitter, 0, thermal.domain.Type.CONNECTION, connection = thermal.domain.Connection(orifice2, 2))
     doain.set_side(emitter, 1, thermal.domain.Type.CONNECTION, connection = thermal.domain.Connection(housing_2, 3))
-    doain.set_side(emitter, 2, thermal.domain.Type.NEUMANN, value = 1.0)
-    doain.set_side(emitter, 3, thermal.domain.Type.NEUMANN, value = 1.0)
+    doain.set_side(emitter, 2, thermal.domain.Type.DIRICHLET, value = 1500.0)
+    doain.set_side(emitter, 3, thermal.domain.Type.DIRICHLET, value = 1500.0)
 
     #set sides orifice1
     doain.set_side(orifice1, 0, thermal.domain.Type.NEUMANN, value = 0.0)
