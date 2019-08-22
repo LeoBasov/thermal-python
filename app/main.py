@@ -74,6 +74,7 @@ def main():
     sover.assemble(domain, CELL_SIZE)
     print('SOLVING NUMERICS')
     sover.solve(DIFF_MAX)
+    sover.get_results(domain)
 
     visualizer.plot(domain)
 

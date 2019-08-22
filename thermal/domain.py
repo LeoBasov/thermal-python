@@ -67,6 +67,11 @@ class Domain:
 
         self._set_temperatures()
 
+    def find_node(self, pos):
+        for i in range(len(self.nodes)):
+            if self.nodes[i].pos == pos:
+                return (i, self.nodes[i])
+
     def _get_type_temp(self, side):
         type = side.type
         temp = None
