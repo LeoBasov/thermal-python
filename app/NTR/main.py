@@ -2,7 +2,7 @@
 
 import sys
 
-sys.path.append('../.')
+sys.path.append('../../.')
 
 import thermal.domain
 import thermal.visualizer
