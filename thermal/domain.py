@@ -31,6 +31,11 @@ class Domain:
         elif max[0] <= min[0] or max[1] <= min[1]:
             raise Exception('Domain', 'min[0]', min[0], 'min[1]', min[1], 'max[0]', max[0], 'max[1]', max[1])
 
+    def set_side(self, block_id, side_id, type, value = None, connection = None):
+        self.blocks[block_id].sides[side_id].type = type
+        self.blocks[block_id].sides[side_id].value = value
+        self.blocks[block_id].sides[side_id].connection = connection
+
 class Node:
     def __init__(self):
         self.id = None
