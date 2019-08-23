@@ -12,7 +12,7 @@ def main():
     print(80*'=')
     print('Thermal test')
 
-    CELL_SIZE = 0.001
+    CELL_SIZE = 0.0001
     DIFF_MAX = 1e-5
 
     domain = thermal.domain.Domain()
@@ -21,13 +21,13 @@ def main():
 
     #set blocks
     housing_1 = domain.add_block((0, 50), (100, 60), conductivity = 1, density = 1, heat_capacity = 1)
-    housing_2 = domain.add_block((100, 50), (200, 60), conductivity = 1, density = 1, heat_capacity = 1)
+    housing_2 = domain.add_block((100, 50), (400, 60), conductivity = 1, density = 1, heat_capacity = 1)
 
-    emitter = domain.add_block((100, 40), (200, 50), conductivity = 1, density = 1, heat_capacity = 1)
+    emitter = domain.add_block((100, 20), (400, 50), conductivity = 1, density = 1, heat_capacity = 1)
 
-    orifice1 = domain.add_block((200, 50), (210, 60), conductivity = 1, density = 1, heat_capacity = 1)
-    orifice2 = domain.add_block((200, 40), (210, 50), conductivity = 1, density = 1, heat_capacity = 1)
-    orifice3 = domain.add_block((200, 30), (210, 40), conductivity = 1, density = 1, heat_capacity = 1)
+    orifice1 = domain.add_block((400, 50), (410, 60), conductivity = 1, density = 1, heat_capacity = 1)
+    orifice2 = domain.add_block((400, 20), (410, 50), conductivity = 1, density = 1, heat_capacity = 1)
+    orifice3 = domain.add_block((400, 10), (410, 20), conductivity = 1, density = 1, heat_capacity = 1)
 
     #set sides housing_1
     domain.set_side(housing_1, 0, thermal.domain.Type.CONNECTION, connection = thermal.domain.Connection(housing_2, 2))
