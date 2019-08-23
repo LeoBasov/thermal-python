@@ -39,9 +39,9 @@ def main():
     sover.solve(DIFF_MAX)
     sover.get_results(domain)
 
-    visualizer.plot(domain)
-    visualizer.plot_inter_r(domain)
-    visualizer.plot_inter_z(domain)
+    visualizer.plot(domain, CELL_SIZE)
+    visualizer.plot_inter_r(domain, CELL_SIZE)
+    visualizer.plot_inter_z(domain, CELL_SIZE)
 
     print(80*'=')
 
