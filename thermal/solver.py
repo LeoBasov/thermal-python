@@ -37,10 +37,17 @@ class Solver:
                 node_z_rp = domain.find_node((node.pos[0], node.pos[1] + 1))
                 node_z_rm = domain.find_node((node.pos[0], node.pos[1] - 1))
 
-                self.matrix[row][node_zp_r[0]] = 0.25
-                self.matrix[row][node_zm_r[0]] = 0.25
-                self.matrix[row][node_z_rp[0]] = 0.25 + cell_size/(8.0*r_i)
-                self.matrix[row][node_z_rm[0]] = 0.25 - cell_size/(8.0*r_i)
+                k_zp_r = node_zp_r[1].conductivity
+                k_zm_r = node_zm_r[1].conductivity
+                k_z_rp = node_z_rp[1].conductivity
+                k_z_rm = node_z_rm[1].conductivity
+
+                k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
+
+                self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_zm_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
+                self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
             elif node.type == Type.NEUMANN:
                 if node.side_type == SideType.UP:
@@ -70,36 +77,20 @@ class Solver:
                 node_z_rp = domain.find_node((node.pos[0], node.pos[1] + 1))
                 node_z_rm = domain.find_node((node.pos[0], node.pos[1] - 1))
 
-                k_ip = None
-                k_im = None
-
                 if node_zp_r == None or node_zm_r == None or node_z_rp == None or node_z_rm == None:
                     continue
 
-                if node.side_type == SideType.UP or node.side_type == SideType.DOWN:
-                    k_ip = node_z_rp[1].conductivity
-                    k_im = node_z_rm[1].conductivity
+                k_zp_r = node_zp_r[1].conductivity
+                k_zm_r = node_zm_r[1].conductivity
+                k_z_rp = node_z_rp[1].conductivity
+                k_z_rm = node_z_rm[1].conductivity
 
-                elif node.side_type == SideType.LEFT or node.side_type == SideType.RIGHT:
-                    k_ip = node_z_rp[1].conductivity
-                    k_im = node_z_rm[1].conductivity
+                k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
 
-                k_i = 0.5*(k_ip + k_im)
-                frac = 2*k_i/(cell_size*cell_size)
-
-                if node.side_type == SideType.UP or node.side_type == SideType.DOWN:
-                    self.matrix[row][node_zp_r[0]] = (k_i/(cell_size*cell_size))/frac
-                    self.matrix[row][node_zm_r[0]] = (k_i/(cell_size*cell_size))/frac
-
-                    self.matrix[row][node_z_rp[0]] = (k_i/(cell_size*cell_size) + k_i/(r_i*cell_size) + (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
-                    self.matrix[row][node_z_rm[0]] = (k_i/(cell_size*cell_size) - k_i/(r_i*cell_size) - (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
-
-                elif node.side_type == SideType.LEFT or node.side_type == SideType.RIGHT:
-                    self.matrix[row][node_zp_r[0]] = (k_i/(cell_size*cell_size) + (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
-                    self.matrix[row][node_zm_r[0]] = (k_i/(cell_size*cell_size) - (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
-
-                    self.matrix[row][node_z_rp[0]] = (k_i/(cell_size*cell_size) + k_i/(r_i*cell_size))/frac
-                    self.matrix[row][node_z_rm[0]] = (k_i/(cell_size*cell_size) - k_i/(r_i*cell_size))/frac
+                self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_zm_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
+                self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
         print("")
 
