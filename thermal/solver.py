@@ -77,20 +77,26 @@ class Solver:
                 node_z_rp = domain.find_node((node.pos[0], node.pos[1] + 1))
                 node_z_rm = domain.find_node((node.pos[0], node.pos[1] - 1))
 
-                if node_zp_r == None or node_zm_r == None or node_z_rp == None or node_z_rm == None:
-                    continue
+                if node_z_rp == None or node_z_rm == None:
+                    self.matrix[row][node_zp_r[0]] = 0.5
+                    self.matrix[row][node_zm_r[0]] = 0.5
 
-                k_zp_r = node_zp_r[1].conductivity
-                k_zm_r = node_zm_r[1].conductivity
-                k_z_rp = node_z_rp[1].conductivity
-                k_z_rm = node_z_rm[1].conductivity
+                elif node_zp_r == None or node_zm_r == None:
+                    self.matrix[row][node_z_rp[0]] = 0.5
+                    self.matrix[row][node_z_rm[0]] = 0.5
 
-                k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
+                else:
+                    k_zp_r = node_zp_r[1].conductivity
+                    k_zm_r = node_zm_r[1].conductivity
+                    k_z_rp = node_z_rp[1].conductivity
+                    k_z_rm = node_z_rm[1].conductivity
 
-                self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
-                self.matrix[row][node_zm_r[0]] = 0.25 - (k_zp_r - k_zm_r)/(16.0*k)
-                self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
-                self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
+                    k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
+
+                    self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                    self.matrix[row][node_zm_r[0]] = 0.25 - (k_zp_r - k_zm_r)/(16.0*k)
+                    self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
+                    self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
         print("")
 

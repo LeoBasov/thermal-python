@@ -13,7 +13,7 @@ def main():
     print('Thermal test')
 
     CELL_SIZE = 0.001
-    DIFF_MAX = 1.0
+    DIFF_MAX = 1.0e-3
 
     domain = thermal.domain.Domain()
     sover = thermal.solver.Solver()
@@ -21,7 +21,7 @@ def main():
 
     #set blocks
     block1 = domain.add_block((0, 10), (50, 60), conductivity = 1, density = 1, heat_capacity = 1)
-    block2 = domain.add_block((50, 10), (100, 60), conductivity = 1, density = 1, heat_capacity = 1)
+    block2 = domain.add_block((50, 10), (100, 60), conductivity = 10, density = 1, heat_capacity = 1)
 
     #set sides block1
     domain.set_side(block1, 0, thermal.domain.Type.CONNECTION, connection = thermal.domain.Connection(block2, 2))
