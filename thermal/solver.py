@@ -45,7 +45,7 @@ class Solver:
                 k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
 
                 self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
-                self.matrix[row][node_zm_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_zm_r[0]] = 0.25 - (k_zp_r - k_zm_r)/(16.0*k)
                 self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
                 self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
@@ -88,7 +88,7 @@ class Solver:
                 k = 0.25*(k_zp_r + k_zm_r) + 0.25*(k_z_rp + k_z_rm)
 
                 self.matrix[row][node_zp_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
-                self.matrix[row][node_zm_r[0]] = 0.25 + (k_zp_r - k_zm_r)/(16.0*k)
+                self.matrix[row][node_zm_r[0]] = 0.25 - (k_zp_r - k_zm_r)/(16.0*k)
                 self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
                 self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
