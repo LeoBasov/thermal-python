@@ -57,6 +57,8 @@ class Visualizer:
             values.append(np.mean(loc))
 
         plt.plot(values)
+        plt.xlabel('r-coord')
+        plt.ylabel('Temperature [K]')
         plt.show()
 
     def plot_inter_z(self, domain):
@@ -75,4 +77,6 @@ class Visualizer:
             values.append(np.mean(loc))
 
         plt.plot(values)
+        plt.xlabel('z-coord')
+        plt.ylabel('Temperature [K]')
         plt.show()
