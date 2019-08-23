@@ -24,6 +24,8 @@ class Solver:
         self.matrix = np.zeros((size, size))
 
         for row in range(size):
+            print("ROW {}/{}".format(row + 1, size), end="\r", flush=True)
+
             node = domain.nodes[row]
             pos = node.pos
 
@@ -98,6 +100,8 @@ class Solver:
 
                     self.matrix[row][node_z_rp[0]] = (k_i/(cell_size*cell_size) + k_i/(r_i*cell_size))/frac
                     self.matrix[row][node_z_rm[0]] = (k_i/(cell_size*cell_size) - k_i/(r_i*cell_size))/frac
+
+        print("")
 
     def _assemble_vector_add(self, domain, cell_size):
         self.vector_add = np.zeros(len(domain.nodes))
