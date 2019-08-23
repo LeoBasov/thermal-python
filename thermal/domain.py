@@ -126,7 +126,7 @@ class Node:
         self.heat_capacity = heat_capacity
 
         self.side_type = side_type
-        self.normder = normder
+        self.normder = normder #dT/dn
 
 class Type(Enum):
     INSIDE = 0
