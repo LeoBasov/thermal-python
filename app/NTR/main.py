@@ -76,7 +76,7 @@ def main():
     sover.solve(DIFF_MAX)
     sover.get_results(domain)
 
-    visualizer.plot(domain)
+    visualizer.plot(domain, CELL_SIZE)
 
     print(80*'=')
 
