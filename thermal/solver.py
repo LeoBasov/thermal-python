@@ -60,6 +60,45 @@ class Solver:
             elif node.type == Type.DIRICHLET:
                 self.matrix[row][row] = 1.0
 
+            elif node.type == Type.CONNECTION:
+                r_i = node.pos[1]*cell_size
+
+                node_zp_r = domain.find_node((node.pos[0] + 1, node.pos[1]))
+                node_zm_r = domain.find_node((node.pos[0] - 1, node.pos[1]))
+                node_z_rp = domain.find_node((node.pos[0], node.pos[1] + 1))
+                node_z_rm = domain.find_node((node.pos[0], node.pos[1] - 1))
+
+                k_ip = None
+                k_im = None
+
+                if node_zp_r == None or node_zm_r == None or node_z_rp == None or node_z_rm == None:
+                    continue
+
+                if node.side_type == SideType.UP or node.side_type == SideType.DOWN:
+                    k_ip = node_z_rp[1].conductivity
+                    k_im = node_z_rm[1].conductivity
+
+                elif node.side_type == SideType.LEFT or node.side_type == SideType.RIGHT:
+                    k_ip = node_z_rp[1].conductivity
+                    k_im = node_z_rm[1].conductivity
+
+                k_i = 0.5*(k_ip + k_im)
+                frac = 2*k_i/(cell_size*cell_size)
+
+                if node.side_type == SideType.UP or node.side_type == SideType.DOWN:
+                    self.matrix[row][node_zp_r[0]] = (k_i/(cell_size*cell_size))/frac
+                    self.matrix[row][node_zm_r[0]] = (k_i/(cell_size*cell_size))/frac
+
+                    self.matrix[row][node_z_rp[0]] = (k_i/(cell_size*cell_size) + k_i/(r_i*cell_size) + (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
+                    self.matrix[row][node_z_rm[0]] = (k_i/(cell_size*cell_size) - k_i/(r_i*cell_size) - (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
+
+                elif node.side_type == SideType.LEFT or node.side_type == SideType.RIGHT:
+                    self.matrix[row][node_zp_r[0]] = (k_i/(cell_size*cell_size) + (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
+                    self.matrix[row][node_zm_r[0]] = (k_i/(cell_size*cell_size) - (k_ip - k_im)/(4.0*cell_size*cell_size))/frac
+
+                    self.matrix[row][node_z_rp[0]] = (k_i/(cell_size*cell_size) + k_i/(r_i*cell_size))/frac
+                    self.matrix[row][node_z_rm[0]] = (k_i/(cell_size*cell_size) - k_i/(r_i*cell_size))/frac
+
     def _assemble_vector_add(self, domain, cell_size):
         self.vector_add = np.zeros(len(domain.nodes))
 
@@ -74,7 +113,8 @@ class Solver:
             itter += 1
             new_vector = np.matmul(self.matrix, self.vector) + self.vector_add
             diffs = abs(new_vector - self.vector)
-            diff_abs = max(diffs)/min(self.vector)
+            min_vec = 1 if min(self.vector) == 0.0 else min(self.vector)
+            diff_abs = max(diffs)/min_vec
             self.vector = new_vector
 
             print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, diff_abs), end="\r", flush=True)
