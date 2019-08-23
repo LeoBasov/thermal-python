@@ -13,7 +13,7 @@ class Visualizer:
         for node in domain.nodes:
             matrix[node.pos[0]][node.pos[1]] = node.temperature
 
-        plt.imshow(np.transpose(matrix), cmap='plasma', origin='lower')
+        plt.imshow(np.transpose(matrix), cmap='jet', origin='lower')
         plt.colorbar()
         plt.show()
 
