@@ -126,14 +126,14 @@ class Solver:
                 self.vector_rad_const[i] = (-1.0)*domain.nodes[i].conductivity*cell_size*BOLTZMANN_CONST
                 self.vector_background_temp_4[i] = math.pow(domain.nodes[i].background_temp, 4)
 
-    def solve(self, diff_frac_max):
+    def solve(self, diff_frac_max, rad_frac):
         itter = 0
         diff_abs_old = sys.float_info.max
 
         while True:
             itter += 1
 
-            self._get_rad_values()
+            self._get_rad_values(rad_frac)
 
             new_vector = np.matmul(self.matrix, self.vector) + self.vector_add + self.vector_rad
             diffs = abs(new_vector - self.vector)
@@ -143,16 +143,21 @@ class Solver:
 
             print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, diff_abs), end="\r", flush=True)
 
-            if diff_abs < diff_frac_max or diff_abs_old <= diff_abs:
+            if diff_abs < diff_frac_max:
                 print("")
                 break
             else:
                 diff_abs_old = diff_abs
 
-    def _get_rad_values(self):
+    def _get_rad_values(self, rad_frac):
         for i in range(len(self.vector_rad_const)):
             if self.vector_rad_const[i]:
                 self.vector_rad[i] = self.vector_rad_const[i]*(math.pow(self.vector[i],4) - self.vector_background_temp_4[i])
+
+                if self.vector_rad[i] > 0.0:
+                    self.vector_rad[i] = min(self.vector_rad[i],  rad_frac*abs(self.vector[i]))
+                elif self.vector_rad[i] < 0.0:
+                    self.vector_rad[i] = max(self.vector_rad[i], -rad_frac*abs(self.vector[i]))
 
     def get_results(self, domain):
         for i in range(len(domain.nodes)):
