@@ -2,6 +2,7 @@ import numpy as np
 import math
 from .domain import Type
 from .domain import SideType
+import sys
 
 BOLTZMANN_CONST = 5.670374419e-8 #W m^−2⋅K^−4
 
@@ -127,6 +128,7 @@ class Solver:
 
     def solve(self, diff_frac_max):
         itter = 0
+        diff_abs_old = sys.float_info.max
 
         while True:
             itter += 1
@@ -141,9 +143,11 @@ class Solver:
 
             print("ITTERATION: {:5d}, MAX DIFF: {:5.5}".format(itter, diff_abs), end="\r", flush=True)
 
-            if diff_abs < diff_frac_max:
+            if diff_abs < diff_frac_max or diff_abs_old <= diff_abs:
                 print("")
                 break
+            else:
+                diff_abs_old = diff_abs
 
     def _get_rad_values(self):
         for i in range(len(self.vector_rad_const)):
