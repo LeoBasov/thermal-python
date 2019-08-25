@@ -123,7 +123,7 @@ class Solver:
 
         for i in range(len(domain.nodes)):
             if domain.nodes[i].type == Type.BLACK_BODY:
-                self.vector_rad_const[i] = (-1.0)*cell_size*BOLTZMANN_CONST
+                self.vector_rad_const[i] = (-1.0)*domain.nodes[i].conductivity*cell_size*BOLTZMANN_CONST
                 self.vector_background_temp_4[i] = math.pow(domain.nodes[i].background_temp, 4)
 
     def solve(self, diff_frac_max):
