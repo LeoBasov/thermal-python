@@ -49,25 +49,26 @@ class Domain:
                     type = None
                     side_type = None
                     temperature = None
-                    normder = None
+                    narmal_derivative = None
+                    background_temp = None
 
                     if z == block.max[0]:
                         side_type = SideType.RIGHT
-                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[0])
+                        (type, temperature, narmal_derivative, background_temp) = self._get_values(block.sides[0])
                     elif r == block.max[1]:
                         side_type = SideType.UP
-                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[1])
+                        (type, temperature, narmal_derivative, background_temp) = self._get_values(block.sides[1])
                     elif z == block.min[0]:
                         side_type = SideType.LEFT
-                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[2])
+                        (type, temperature, narmal_derivative, background_temp) = self._get_values(block.sides[2])
                     elif r == block.min[1]:
                         side_type = SideType.DOWN
-                        (type, temperature, normder) = self._get_type_temp_normder(block.sides[3])
+                        (type, temperature, narmal_derivative, background_temp) = self._get_values(block.sides[3])
                     else:
                         type = Type.INSIDE
 
                     if type != Type.CONNECTION or not self._nodes_exists(pos):
-                        node = Node(type, pos, temperature, conductivity, density, heat_capacity, side_type, normder)
+                        node = Node(type, pos, temperature, conductivity, density, heat_capacity, side_type, narmal_derivative, background_temp)
 
                         self.nodes.append(node)
 
@@ -78,17 +79,20 @@ class Domain:
             if self.nodes[i].pos == pos:
                 return (i, self.nodes[i])
 
-    def _get_type_temp_normder(self, side):
+    def _get_values(self, side):
         type = side.type
         temp = None
-        normder = None
+        narmal_derivative = None
+        background_temp = None
 
         if type == Type.DIRICHLET:
             temp = side.value
         elif type == Type.NEUMANN:
-            normder = side.value
+            narmal_derivative = side.value
+        elif type == Type.BLACK_BODY:
+            background_temp = side.value
 
-        return (type, temp, normder)
+        return (type, temp, narmal_derivative, background_temp)
 
     def _nodes_exists(self, pos):
         for node in self.nodes:
@@ -117,7 +121,7 @@ class Domain:
                  node.temperature = temperature
 
 class Node:
-    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity, side_type, normder):
+    def __init__(self, type, pos, temperature, conductivity, density, heat_capacity, side_type, narmal_derivative, background_temp):
         self.type = type
         self.pos = pos
         self.temperature = temperature
@@ -126,13 +130,15 @@ class Node:
         self.heat_capacity = heat_capacity
 
         self.side_type = side_type
-        self.normder = normder #dT/dn
+        self.narmal_derivative = narmal_derivative #dT/dn
+        self.background_temp = background_temp
 
 class Type(Enum):
     INSIDE = 0
     CONNECTION = 1
     DIRICHLET = 2
     NEUMANN = 3
+    BLACK_BODY = 4
 
 class SideType(Enum):
     UP = 0

@@ -1,6 +1,9 @@
 import numpy as np
+import math
 from .domain import Type
 from .domain import SideType
+
+BOLTZMANN_CONST = 5.670374419e-8 #W m^−2⋅K^−4
 
 class Solver:
     def __init__(self):
@@ -8,10 +11,15 @@ class Solver:
         self.vector = None
         self.vector_add = None
 
+        self.vector_rad = None
+        self.vector_rad_const = None
+        self.vector_background_temp_4 = None
+
     def assemble(self, domain, cell_size):
         self._assemble_vector(domain)
         self._assemble_matrix(domain, cell_size)
         self._assemble_vector_add(domain, cell_size)
+        self._assemble_vector_rad(domain, cell_size)
 
     def _assemble_vector(self, domain):
         self.vector = np.zeros(len(domain.nodes))
@@ -49,7 +57,7 @@ class Solver:
                 self.matrix[row][node_z_rp[0]] = 0.25 + (k_z_rp - k_z_rm)/(16.0*k) + cell_size/(8.0*r_i)
                 self.matrix[row][node_z_rm[0]] = 0.25 - (k_z_rp - k_z_rm)/(16.0*k) - cell_size/(8.0*r_i)
 
-            elif node.type == Type.NEUMANN:
+            elif node.type == Type.NEUMANN or node.type == Type.BLACK_BODY:
                 if node.side_type == SideType.UP:
                     node_z_rm = domain.find_node((node.pos[0], node.pos[1] - 1))
                     self.matrix[row][node_z_rm[0]] = 1.0
@@ -105,14 +113,27 @@ class Solver:
 
         for i in range(len(domain.nodes)):
             if domain.nodes[i].type == Type.NEUMANN:
-                self.vector_add[i] = domain.nodes[i].normder*cell_size
+                self.vector_add[i] = domain.nodes[i].narmal_derivative*cell_size
+
+    def _assemble_vector_rad(self, domain, cell_size):
+        self.vector_rad = np.zeros(len(domain.nodes))
+        self.vector_rad_const = len(domain.nodes)*[None]
+        self.vector_background_temp_4 = len(domain.nodes)*[None]
+
+        for i in range(len(domain.nodes)):
+            if domain.nodes[i].type == Type.BLACK_BODY:
+                self.vector_rad_const[i] = -domain.nodes[i].conductivity*cell_size*BOLTZMANN_CONST
+                self.vector_background_temp_4[i] = math.pow(domain.nodes[i].background_temp, 4)
 
     def solve(self, diff_frac_max):
         itter = 0
 
         while True:
             itter += 1
-            new_vector = np.matmul(self.matrix, self.vector) + self.vector_add
+
+            self._get_rad_values()
+
+            new_vector = np.matmul(self.matrix, self.vector) + self.vector_add + self.vector_rad
             diffs = abs(new_vector - self.vector)
             min_vec = 1 if min(self.vector) == 0.0 else min(self.vector)
             diff_abs = max(diffs)/min_vec
@@ -123,6 +144,11 @@ class Solver:
             if diff_abs < diff_frac_max:
                 print("")
                 break
+
+    def _get_rad_values(self):
+        for i in range(len(self.vector_rad_const)):
+            if self.vector_rad_const[i]:
+                self.vector_rad[i] = self.vector_rad_const[i]*(math.pow(self.vector[i],4) - self.vector_background_temp_4[i])
 
     def get_results(self, domain):
         for i in range(len(domain.nodes)):
