@@ -4,13 +4,13 @@ import math
 def calc_T(q, c):
     T = 0.50000*math.sqrt(0.38157*math.pow((1.7321*math.sqrt(256*math.pow(c, 3) + 27*math.pow(q, 4))
     + 9*math.pow(q, 2)), (1/3)) - (3.4943*c)/math.pow((1.7321*math.sqrt(256*math.pow(c, 3) + 27*math.pow(q, 4)) + 9*math.pow(q, 2)), (1/3)))
-    """- 0.50000 sqrt(
-    (3.4943 c)/(1.7321 sqrt(256 c^3 + 27 q^4) + 9 q^2)^(1/3)
+    - 0.50000*math.sqrt(
+    (3.4943*c)/math.pow((1.7321*math.sqrt(256*math.pow(c, 3) + 27*math.pow(q, 4)) + 9*math.pow(q, 2)), (1/3))
     #- 0.38157 (1.7321 sqrt(256 c^3 + 27 q^4) + 9 q^2)^(1/3)
     #- (2 q)/sqrt(0.38157 (1.7321 sqrt(256 c^3 + 27 q^4) + 9 q^2)^(1/3)
     #    - (3.4943 c)/(1.7321 sqrt(256 c^3 + 27 q^4) + 9 q^2)^(1/3)
+    #)
     )
-    )"""
 
     return T
 
