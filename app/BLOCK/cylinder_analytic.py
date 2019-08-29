@@ -23,10 +23,10 @@ class Cylinder:
     def conductive_heat_flow(self, T_i, T_a):
         return self.conductivity*(T_a - T_i)/math.log(self.r_a/self.r_i)
 
-    def radiation_heat_flow(self, T_a, T_b):
+    def outer_radiative_heat_flow(self, T_a, T_b):
         return self.emissivity*STEFAN_BOLTZMANN_CONST*(math.pow(T_a, 4) - math.pow(T_b, 4))
 
-    def radiation_heat_flow_vec(self, T_a_vec, T_b_vec):
+    def outer_radiative_heat_flow_vec(self, T_a_vec, T_b_vec):
         q_rad = []
 
         for i in range(len(T_a_vec)):
