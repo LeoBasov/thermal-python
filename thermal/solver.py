@@ -174,11 +174,20 @@ class Solver:
     def _get_rad_values(self, rad_frac):
         for i in range(len(self.vector_rad_index_pairs)):
             if self.vector_rad_index_pairs[i][0]:
-                q = self.vector_rad_index_pairs[i][2]/(BOLTZMANN_CONST*self.cell_size )
+                T_i = self.vector[i]
+                T_im = self.vector[self.vector_rad_index_pairs[i][1]]
+
+                for _ in range(50):
+                    dT = (-BOLTZMANN_CONST*self.cell_size/self.vector_rad_index_pairs[i][2])*(math.pow(T_i, 4) - self.vector_background_temp_4[i])
+                    T_i = T_im + dT
+
+                self.vector_rad[i] = T_i
+
+                """q = self.vector_rad_index_pairs[i][2]/(BOLTZMANN_CONST*self.cell_size )
                 c = self.vector_background_temp_4[i] + q*self.vector[self.vector_rad_index_pairs[i][1]]
                 T = calc_T(q, c)
 
-                self.vector_rad[i] = T
+                self.vector_rad[i] = T"""
 
     def get_results(self, domain):
         for i in range(len(domain.nodes)):
